@@ -132,15 +132,37 @@ impl XdgShellHandler for State {
         let window = mapped.window.clone();
         let output = output.clone();
 
+        let output_pos = self
+            .niri
+            .global_space
+            .output_geometry(&output)
+            .unwrap()
+            .loc
+            .to_f64();
+
+        let pos_within_output = start_data.location() - output_pos;
+
+        if !self
+            .niri
+            .layout
+            .interactive_move_begin(window.clone(), &output, pos_within_output)
+        {
+            return;
+        }
+
         match &start_data {
             PointerOrTouchStartData::Pointer(_) => {
-                if let Some(grab) = MoveGrab::new(self, start_data, window.clone(), true) {
+                if let Some(grab) =
+                    MoveGrab::new(self, start_data, window.clone(), true, false, false)
+                {
                     pointer.set_grab(self, grab, serial, Focus::Clear);
                 }
             }
             PointerOrTouchStartData::Touch(_) => {
                 let touch = self.niri.seat.get_touch().unwrap();
-                if let Some(grab) = MoveGrab::new(self, start_data, window.clone(), true) {
+                if let Some(grab) =
+                    MoveGrab::new(self, start_data, window.clone(), true, false, false)
+                {
                     touch.set_grab(self, grab, serial);
                 }
             }
