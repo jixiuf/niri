@@ -3874,42 +3874,48 @@ impl State {
                                 })
                         };
                         if let Some((output, active_window)) = window {
-                            let pos_within_global_space = Rectangle::new(
-                                pos_within_output.loc
-                                    + self
-                                        .niri
-                                        .global_space
-                                        .output_geometry(&output)
-                                        .unwrap()
-                                        .loc
-                                        .to_f64(),
-                                pos_within_output.size,
-                            );
-                            let location =
-                                pos_within_global_space.loc + (pos_within_global_space.size / 2.0);
-                            if self.niri.layout.interactive_move_begin(
-                                active_window.clone(),
-                                &output,
-                                location,
-                            ) {
-                                let start_data = PointerGrabStartData {
-                                    focus: None,
-                                    button: 1,
-                                    location,
-                                };
-                                let grab = MoveGrab::new(
-                                    start_data,
-                                    active_window,
-                                    is_overview_open,
-                                    true,
-                                );
-                                self.niri.seat.get_pointer().unwrap().set_grab(
-                                    self,
-                                    grab,
-                                    SERIAL_COUNTER.next_serial(),
-                                    Focus::Clear,
-                                );
+                            // let pos_within_global_space = Rectangle::new(
+                            //     pos_within_output.loc
+                            //         + self
+                            //             .niri
+                            //             .global_space
+                            //             .output_geometry(&output)
+                            //             .unwrap()
+                            //             .loc
+                            //             .to_f64(),
+                            //     pos_within_output.size,
+                            // );
+                            if delta_x > 0.0 {
+                                self.niri.layout.focus_column_right_or_first();
+                            } else {
+                                self.niri.layout.focus_column_left_or_last();
                             }
+                            // let location =
+                            //     pos_within_global_space.loc + (pos_within_global_space.size / 2.0);
+                            // if self.niri.layout.interactive_move_begin(
+                            //     active_window.clone(),
+                            //     &output,
+                            //     location,
+                            // ) {
+                            //     // let start_data = PointerGrabStartData {
+                            //     //     focus: None,
+                            //     //     button: 1,
+                            //     //     location,
+                            //     // };
+                            //     // let grab = MoveGrab::new(
+                            //     //     start_data,
+                            //     //     active_window,
+                            //     //     is_overview_open,
+                            //     //     true,
+                            //     // );
+                            //     self.niri.layout.focus_column_left_or_last();
+                            //     // self.niri.seat.get_pointer().unwrap().set_grab(
+                            //     //     self,
+                            //     //     grab,
+                            //     //     SERIAL_COUNTER.next_serial(),
+                            //     //     Focus::Clear,
+                            //     // );
+                            // }
                         }
                     }
                 }

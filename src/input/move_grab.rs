@@ -456,8 +456,8 @@ impl PointerGrab<State> for MoveGrab {
         handle: &mut PointerInnerHandle<'_, State>,
         event: &GestureSwipeEndEvent,
     ) {
-        // handle.gesture_swipe_end(data, event);
-        handle.unset_grab(self, data, event.serial, event.time, true);
+        handle.gesture_swipe_end(data, event);
+        // handle.unset_grab(self, data, event.serial, event.time, true);
     }
 
     fn gesture_pinch_begin(
